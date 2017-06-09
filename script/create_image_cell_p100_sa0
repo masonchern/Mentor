@@ -1,0 +1,26 @@
+import sys
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+
+
+np.set_printoptions(threshold = np.nan)
+
+img = np.zeros((10,196,143,1430))
+for chain_num in range(1,11):
+  counter = 0
+  with open('../pattern_p100_sa0/data_chain'+str(chain_num)+'_p100_sa0') as file:
+    for line in file:
+
+      for i in range(196):
+        img[chain_num-1][i][counter]=line[:-1].split(', ')[1430*i:1430*(i+1)]
+      counter+=1
+
+
+
+
+
+for chain_num in range(1,11):
+  for pat in range(196):
+    plt.imsave('../img_cell/chain'+str(chain_num)+'_pat'+str(pat)+'_p100_sa0',img[chain_num-1][pat],cmap=cm.gray)
+

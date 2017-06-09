@@ -1,0 +1,69 @@
+import sys
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+
+
+np.set_printoptions(threshold = np.nan)
+
+
+
+features = 1430
+patterns = 448
+cells = 1430
+
+train_data = np.zeros((features,patterns,cells))
+
+for chain in range(7):
+
+  #each chain do 143 cell
+  for cell in range(143):
+    if(chain > 5 and cell == 142):
+      continue
+    else:
+      start = 0
+      with open('../Tran_p100_SA1/'+str(sys.argv[((chain*143)+cell+1)])) as file:
+        for line in file:
+          if(start == 1):
+            if('last' in line):
+              continue
+            da = line.split()
+            if('chain' in da[1]):
+              if(da[1]=='chain10'):
+                train_data[int(chain*143+cell)][int(da[0])][1287+int(da[2])] += 1
+              elif(da[1]=='chain9'):
+                train_data[int(chain*143+cell)][int(da[0])][1144+int(da[2])] += 1
+              elif(da[1]=='chain8'):
+                train_data[int(chain*143+cell)][int(da[0])][1001+int(da[2])] += 1
+              elif(da[1]=='chain7'):
+                train_data[int(chain*143+cell)][int(da[0])][858+int(da[2])] += 1
+              elif(da[1]=='chain6'):
+                train_data[int(chain*143+cell)][int(da[0])][715+int(da[2])] += 1
+              elif(da[1]=='chain5'):
+                train_data[int(chain*143+cell)][int(da[0])][572+int(da[2])] += 1
+              elif(da[1]=='chain4'):
+                train_data[int(chain*143+cell)][int(da[0])][429+int(da[2])] += 1
+              elif(da[1]=='chain3'):
+                train_data[int(chain*143+cell)][int(da[0])][286+int(da[2])] += 1
+              elif(da[1]=='chain2'):
+                train_data[int(chain*143+cell)][int(da[0])][143+int(da[2])] += 1
+              elif(da[1]=='chain1'):
+                train_data[int(chain*143+cell)][int(da[0])][int(da[2])] += 1
+          if('scan' in line):
+            start = 1
+
+
+for case in range(1,11):
+
+  file = open('../pattern_p100_sa1_tran/data_chain'+str(case)+'_p100_sa1_tran','w')
+  for i in range((case-1)*143,case*143):
+    counter = 0
+    for j in range(patterns):
+      for k in range(cells):
+        file.write(str(train_data[i][j][k]))
+        if((j == (patterns-1))and(k == (cells-1))):
+          continue
+        else: 
+          file.write(', ')
+    file.write('\n') 
+  file.close()

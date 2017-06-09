@@ -1,0 +1,63 @@
+import sys
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
+
+
+np.set_printoptions(threshold = np.nan)
+
+
+
+features = 1430
+patterns = 196
+cells = 1430
+
+train_data = np.zeros((features,patterns,cells))
+
+for i in range(10):
+	for j in range(143):
+		start = 0
+		with open('../multiple_faults/cell'+str(i)+'_cell'+str(j)) as file:
+			for line in file:
+				if(start == 1):
+					if('last' in line):
+						continue
+					da = line.split()
+					if('chain' in da[1]):
+						if(da[1]=='chain10'):
+							train_data[143*i+j][int(da[0])][1287+int(da[2])] += 1
+						elif(da[1]=='chain9'):
+							train_data[143*i+j][int(da[0])][1144+int(da[2])] += 1
+						elif(da[1]=='chain8'):
+							train_data[143*i+j][int(da[0])][1001+int(da[2])] += 1
+						elif(da[1]=='chain7'):
+							train_data[143*i+j][int(da[0])][858+int(da[2])] += 1
+						elif(da[1]=='chain6'):
+							train_data[143*i+j][int(da[0])][715+int(da[2])] += 1
+						elif(da[1]=='chain5'):
+							train_data[143*i+j][int(da[0])][572+int(da[2])] += 1
+						elif(da[1]=='chain4'):
+							train_data[143*i+j][int(da[0])][429+int(da[2])] += 1
+						elif(da[1]=='chain3'):
+							train_data[143*i+j][int(da[0])][286+int(da[2])] += 1
+						elif(da[1]=='chain2'):
+							train_data[143*i+j][int(da[0])][143+int(da[2])] += 1
+						elif(da[1]=='chain1'):
+							train_data[143*i+j][int(da[0])][int(da[2])] += 1
+				if('scan' in line):
+					start = 1
+
+
+
+file = open('../mult_SA0_p100/data_chain1_2_p100_sa0','w')
+for i in range(1430):
+	counter = 0
+	for j in range(patterns):
+		for k in range(cells):
+			file.write(str(train_data[i][j][k]))
+			if((j == (patterns-1))and(k == (cells-1))):
+				continue
+			else: 
+				file.write(', ')
+	file.write('\n') 
+file.close()

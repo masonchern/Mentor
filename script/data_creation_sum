@@ -1,0 +1,84 @@
+import numpy as np
+import pandas as pd
+
+
+
+for case in range(1,11):
+	x_data_train = np.zeros((286,1431))
+	y_data_train = np.zeros((286,143))
+	x_data_test = np.zeros((286,1431))
+	y_data_test = np.zeros((286,143))
+	#one hot label
+	y_data_train[:143]=np.identity(143)
+	y_data_train[143:]=np.identity(143)
+	y_data_test[:143]=np.identity(143)
+	y_data_test[143:]=np.identity(143)
+
+	#taking all data into x_data
+	x_data_train = np.zeros((286,1431))
+	x_data_test = np.zeros((286,1431))
+	d1 = 0
+	#sa0
+	with open('../pattern_p100_sa0/data_chain'+str(case)+'_p100_sa0') as file:
+		for line in file:
+			d2 = 0
+			lin = line[:-1].split(', ') 
+			for _ in lin:
+				x_data_train[d1][d2] += float(_)
+				d2 += 1
+				if(d2 == 1430):
+					d2 = 0
+			#extra bit for SA0
+			x_data_train[d1][1430] = 196
+			d1 += 1
+
+
+	#sa1
+	with open('../pattern_p100_sa1/data_chain'+str(case)+'_p100_sa1') as file:
+		for line in file:
+			d2 = 0
+			lin = line[:-1].split(', ') 
+			for _ in lin:
+				x_data_train[d1][d2] += float(_)
+				d2 += 1
+				if(d2 == 1430):
+					d2 = 0
+			#extra bit for SA1
+			x_data_train[d1][1430] = 0
+			d1 += 1
+
+	d1 = 0
+	#sa0 p50
+	with open('../pattern_p50_sa0/data_chain'+str(case)+'_p50_sa0') as file:
+		for line in file:
+			d2 = 0
+			lin = line[:-1].split(', ') 
+			for _ in lin:
+				x_data_test[d1][d2] += float(_)
+				d2 += 1
+				if(d2 == 1430):
+					d2 = 0
+			#extra bit for SA0
+			x_data_test[d1][1430] = 196
+			d1 += 1
+
+
+	#sa1 p50
+	with open('../pattern_p50_sa1/data_chain'+str(case)+'_p50_sa1') as file:
+		for line in file:
+			d2 = 0
+			lin = line[:-1].split(', ') 
+			for _ in lin:
+				x_data_test[d1][d2] += float(_)
+				d2 += 1
+				if(d2 == 1430):
+					d2 = 0
+			#extra bit for SA1
+			x_data_test[d1][1430] = 0
+			d1 += 1
+
+	df = pd.DataFrame(x_data_train)
+	df.to_csv('../inputs/x_data_train_'+str(case),header=False,index=False)
+	df2 = pd.DataFrame(x_data_test)
+	df2.to_csv('../inputs/x_data_test_'+str(case),header=False,index=False)
+
